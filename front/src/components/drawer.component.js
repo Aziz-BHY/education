@@ -18,8 +18,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { useCookies } from 'react-cookie';
 import { useJwt } from "react-jwt";
-import Content from './Content.component';
-
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 const drawerWidth = 240;
 const sidebar = role => {
   switch(role){
@@ -31,11 +31,13 @@ const sidebar = role => {
   }
 }
 function ResponsiveDrawer(props) {
-  const { window } = props;
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [cookies] = useCookies(['education']);
+  const [cookies, setCookie,removeCookies] = useCookies(['education']);
   const { decodedToken } = useJwt(cookies.education);
-  const [page, setPage] = React.useState("")
+  if(!cookies.education) {
+    window.location.href = "/login";
+}
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -46,7 +48,7 @@ function ResponsiveDrawer(props) {
       <List>
         {sidebar(decodedToken?.role).map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => setPage(text)}>
+            <ListItemButton onClick={() => navigate("/"+text.toLowerCase())}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
@@ -58,7 +60,7 @@ function ResponsiveDrawer(props) {
     </div>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container = window !== undefined ? () => window.document.body : undefined;
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -83,6 +85,10 @@ function ResponsiveDrawer(props) {
           <Typography variant="h6" noWrap component="div">
             
           </Typography>
+          <Button style={{color: 'white'}} onClick={() =>{
+            removeCookies('education');
+            navigate("/login");
+          }}>Déconnecter</Button> 
         </Toolbar>
       </AppBar>
       <Box
@@ -122,7 +128,9 @@ function ResponsiveDrawer(props) {
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
         <Toolbar />
-        <Content page={page} setPage={setPage} decodedToken={decodedToken}  />
+        {
+          props.children
+        }
       </Box>
     </Box>
   );

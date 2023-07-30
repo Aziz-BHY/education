@@ -121,11 +121,28 @@ const getCours = asyncHandler(async (req, res) => {
     }
 })
 
+const getCoursByteacherId = asyncHandler(async (req, res) => {
+    try{
+        const cours = await Cours.find({teacher: req.params.id});
+      if(!cours){
+        res.status(400);
+        throw new Error("Cours not found");
+      }
+      res.json(cours);
+    }
+    catch(err){
+      res.json({
+        error: err.message
+      })
+    }
+})
+
 module.exports = {
     createCours,
     updateCours,
     getCoursById,
     getCoursBystudentId,
     deleteCours,
-    getCours
+    getCours,
+    getCoursByteacherId
 };

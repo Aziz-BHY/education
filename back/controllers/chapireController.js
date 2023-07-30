@@ -4,12 +4,12 @@ const Cours = require("../models/coursModel");
 
 const CreateChapitre = asyncHandler(async (req, res) => {
   try{
-    const {title} = req.body;
+    const {title, coursId} = req.body;
     const chapitre = new Chapitre({
       title,
       content: []
     });
-    let cours = await Cours.findById(req.params.coursId);
+    let cours = await Cours.findById(coursId);
     cours.chapitres.push(chapitre._id);
     res.json(chapitre);
   }
