@@ -48,8 +48,19 @@ const createUser = asyncHandler(async (req, res) => {
   }
 });
 
-
+const getUsers = asyncHandler(async (req, res) => {
+  try{
+    const users = await User.find({role: req.params.role});
+    res.json(users);
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    });
+  }
+});
 
 module.exports = {
-    createUser
+    createUser,
+    getUsers
 };

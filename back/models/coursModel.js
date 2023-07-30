@@ -9,7 +9,6 @@ const coursSchema = new mongoose.Schema(
     },
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
-      required: [true, "teacher is required"],
     },
     students: [
         {
@@ -21,10 +20,10 @@ const coursSchema = new mongoose.Schema(
         type: String,
         required: [true, "Description is required"],
     },
-    chapitres:{
-        type: [chapitreModel],
-        default: []
-    },
+    chapitres:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Chapitre"
+    }],
   },
   {
     timestamps: true,

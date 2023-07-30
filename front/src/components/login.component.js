@@ -17,10 +17,9 @@ export default function Login() {
             password
         });
         if(res.data.message == "success") {
-            setCookie("education", res.data.token, {path: "/"});
+            setCookie("education", res.data.data, {path: "/"});
             window.location.href = "/";
-        }
-    }
+        }}
     return(
         <div>
             <h1>Login</h1>

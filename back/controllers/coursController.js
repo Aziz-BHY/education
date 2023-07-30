@@ -1,11 +1,11 @@
 const asyncHandler = require("express-async-handler");
 var jwt = require("jsonwebtoken");
-const User = require("../models/user");
-const Cours = require("../models/cours");
+const User = require("../models/userModel");
+const Cours = require("../models/coursModel");
 
 const createCours = asyncHandler(async (req, res) => {
   try{
-    const {name,  description} = req.body;
+    const {name,  description, teacher} = req.body;
     if(!name || !description){
       res.status(400);
       throw new Error("Please add all fields");
@@ -13,7 +13,7 @@ const createCours = asyncHandler(async (req, res) => {
     const cours = await Cours.create({
         name: name,
         description: description,
-        teacher: req.body.payload.id,
+        teacher: teacher? teacher : null,
         students: [],
         chapitres: []
     });
@@ -105,10 +105,27 @@ const getCoursBystudentId = asyncHandler(async (req, res) => {
     }
 });
 
+const getCours = asyncHandler(async (req, res) => {
+    try{
+        const cours = await Cours.find();
+      if(!cours){
+        res.status(400);
+        throw new Error("Cours not found");
+      }
+      res.json(cours);
+    }
+    catch(err){
+      res.json({
+        error: err.message
+      })
+    }
+})
+
 module.exports = {
     createCours,
     updateCours,
     getCoursById,
     getCoursBystudentId,
-    deleteCours
+    deleteCours,
+    getCours
 };
