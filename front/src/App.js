@@ -6,8 +6,11 @@ import ProfAdminComponent from './components/admin/Prof.component';
 import EspaceEleveComponent from './components/eleve/EspaceEleve.component'
 import CoursSplitter from "./components/cours.splitter";
 import ElevesSplitter from "./components/eleves.splitter";
-import ChapitresComponent from "./components/enseignant/Chapitres.component";
+import CoursComponent from "./components/enseignant/Cours.component";
 import ChapitreForm from "./components/enseignant/chapitre.form";
+import UploadContenu from "./components/enseignant/upload";
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -18,10 +21,11 @@ function App() {
       <Route path="/parents" element={<Drawer><ParentAdminComponent /></Drawer>} />
       <Route path="/profs" element={<Drawer><ProfAdminComponent /></Drawer>} />
       <Route path="/espace" element={<Drawer><EspaceEleveComponent /></Drawer>} />
-      <Route path="/cours/:id/chapitres" element={<Drawer><ChapitresComponent /></Drawer>} />
+      <Route path="/cours/:id/chapitres" element={<Drawer><CoursComponent /></Drawer>} />
       <Route path="/cours/:id/chapitres/new" element={<Drawer><ChapitreForm /></Drawer>} />
+      <Route path="/cours/:idcours/chapitres/:idchapitre/contenu" element={<Drawer><UploadContenu /></Drawer>} />
       <Route path="/login" element={<Login />} />
-      <Route path="*" element={<h1>Page Not Found</h1>} />"
+      <Route path="*" element={<iframe id="js-media-frame" style={{ width: "500px", height: "500px"}} itemprop="associatedMedia" src="https://www.edumedia-sciences.com/fr/media/frame/675/?r=105623" class="embed__content"></iframe>} />"
         </Routes>
       </BrowserRouter>
   );

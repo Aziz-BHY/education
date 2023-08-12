@@ -1,6 +1,6 @@
 import CoursEleveComponent from './eleve/Cours.component';
 import CoursAdminComponent from './admin/Cours.component';
-import CoursTeacherComponent from './enseignant/Cours.component';
+import CoursTeacherComponent from './enseignant/Cours.list';
 import { useJwt } from "react-jwt";
 import { useCookies } from 'react-cookie';
 

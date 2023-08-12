@@ -8,10 +8,16 @@ const chapitreSchema = new mongoose.Schema(
     },
     content: [
         {
-            link: {
-                type: String,
-                required: [true, "link is required"],
+            _id: {
+              type: mongoose.Schema.Types.ObjectId,
+              required: [true, "must specify id"]
             },
+            type:{
+              type: String,
+              enum: ['Exercice', 'Cours', 'Animation'],
+              required: [true, "must specify type"]
+            },
+            files: [],
             description: {
                 type: String,
                 required: [true, "Description is required"],

@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Chapitre = require("../models/chapitreModel");
 const Cours = require("../models/coursModel");
-
+var mongoose = require('mongoose');
 const CreateChapitre = asyncHandler(async (req, res) => {
   try{
     const {title, coursId} = req.body;
@@ -9,8 +9,10 @@ const CreateChapitre = asyncHandler(async (req, res) => {
       title,
       content: []
     });
+    await chapitre.save();
     let cours = await Cours.findById(coursId);
     cours.chapitres.push(chapitre._id);
+    await cours.save()
     res.json(chapitre);
   }
   catch(err){
@@ -22,9 +24,9 @@ const CreateChapitre = asyncHandler(async (req, res) => {
 
 const deleteChapitre = asyncHandler(async (req, res) => {
     try{
-        const chapitre = await Chapitre.findById(req.params.chapitreId);
+        const chapitre = await Chapitre.findById(req.params.id);
         if(chapitre){
-            await chapitre.remove();
+            await Chapitre.deleteOne({_id: req.params.id});
             return res.json({message: "Chapitre deleted"});
         }
         else{
@@ -33,7 +35,7 @@ const deleteChapitre = asyncHandler(async (req, res) => {
         }
     }
     catch(err){
-      res.json({
+      res.status(500).json({
         error: err.message
       })
     }
@@ -41,7 +43,7 @@ const deleteChapitre = asyncHandler(async (req, res) => {
 
   const updateChapitre = asyncHandler(async (req, res) => {
     try{
-        const chapitre = await Chapitre.findById(req.params.chapitreId);
+        const chapitre = await Chapitre.findById(req.params.id);
         if(chapitre){
             chapitre.title = req.body.title;
             await chapitre.save();
@@ -81,7 +83,7 @@ const deleteContent = asyncHandler(async (req, res) => {
     try{
       const chapitre = await Chapitre.findById(req.params.chapitreId);
       for(let i = 0; i < chapitre.content.length; i++){
-        if(chapitre.content[i] == req.params.contentId){
+        if(chapitre.content[i]._id == req.params.contentId){
           chapitre.content.splice(i, 1);
           await chapitre.save();
           return res.status(200).json(chapitre);
@@ -100,7 +102,13 @@ const deleteContent = asyncHandler(async (req, res) => {
 const addContent = asyncHandler(async (req, res) => {
     try{
     const chapitre = await Chapitre.findById(req.params.chapitreId);
-    chapitre.content.push(req.body);
+    chapitre.content.push({
+      _id: new mongoose.Types.ObjectId(),
+      type: req.body.type,
+      description: req.body.description,
+      //only file names
+      files: req.files.map(file => file.filename)
+    });
     await chapitre.save();
     res.status(200).json(chapitre);
   }
@@ -110,6 +118,11 @@ const addContent = asyncHandler(async (req, res) => {
     })
   }
 })
+
 module.exports = {
+    updateChapitre,
     CreateChapitre,
+    addContent,
+    deleteContent,
+    deleteChapitre,
 };

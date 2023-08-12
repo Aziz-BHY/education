@@ -17,14 +17,14 @@ export default function() {
             title: titre,
             coursId: id
         })
-            .then(res => console.log(res.data))
+            .then(res => window.location = "/cours/"+id+"/chapitres")
             .catch(err=> console.log(err))
     }
     return (
         <div>
             <h1>Cours: {cours?.name}</h1>
             <h2>Créer un chapitre</h2>
-            <input type="text" placeholder="Titre du chapitre" onClick={({target})=>setTitre(target.value)} />
+            <input type="text" placeholder="Titre du chapitre" onChange={({target})=>setTitre(target.value)} />
             <Button variant="contained" onClick={handleSubmit}>Créer</Button>
         </div>
     )
