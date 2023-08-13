@@ -48,7 +48,7 @@ function ResponsiveDrawer(props) {
       <List>
         {sidebar(decodedToken?.role).map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton onClick={() => navigate("/"+text.toLowerCase())}>
+            <ListItemButton onClick={() => navigate("/"+text.toLowerCase().replace(" ", ""))}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
