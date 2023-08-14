@@ -23,7 +23,7 @@ import { Button } from '@mui/material';
 const drawerWidth = 240;
 const sidebar = role => {
   switch(role){
-    case 'admin': return ["Eleves", "Parents", "Profs", "Cours"];
+    case 'admin': return ["Eleves", "Parents", "Profs", "Cours", "classe"];
     case 'teacher': return ["Cours"];
     case 'parent': return ["Eleves"];
     case 'student': return ["Cours", "Espace Personnel"];

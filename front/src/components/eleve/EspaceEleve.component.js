@@ -9,6 +9,10 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 export default function() {
     const [files, setFiles] = React.useState([])
     const [path, setPath] = React.useState("")
+    const [showFile, setShowFile] = React.useState(false);
+    const [showFolder, setShowFolder] = React.useState(false);
+    const [folderName, setFolderName] = React.useState("");
+    const [file, setFile] = React.useState("");
     React.useEffect(()=>{
         getFiles(path)
     }, [path])
@@ -53,9 +57,42 @@ export default function() {
       }
       </Breadcrumbs>
       <div>
-        <Button variant="contained" onClick={()=>{}}>Créer un dossier</Button>
-        <Button variant="contained" onClick={()=>{}}>Ajouter un fichier</Button>
+        <Button variant="contained" onClick={()=>{setShowFolder(true)}}>Créer un dossier</Button>
+        <Button variant="contained" onClick={()=>{setShowFile(true)}}>Ajouter un fichier</Button>
       </div>
+      {
+        showFile ?
+            <input type="file" name="file" id="file" onChange={e=>{
+                //setFile(e.target.files[0])
+                const formData = new FormData();
+                formData.append('file', e.target.files[0])
+                formData.append('path', path)
+                axios.post(`http://localhost:5000/upload/student/64cd2f31bab78984a73ecc99/file?path=${path}`, formData)
+                .then(res => window.location.reload())
+                .catch(err => console.error(err))
+            }}/>
+          : <></>
+      }
+      
+      {
+        showFolder ?
+        <div>
+            <input type="text" name="folder" id="folder" onChange={e=>setFolderName(e.target.value)}/>
+            <Button variant="contained" onClick={()=>{
+                if(!folderName){
+                    return
+                }
+                axios.post("http://localhost:5000/upload/student/64cd2f31bab78984a73ecc99/folder", {
+                    path: path,
+                    folder: folderName
+                }).then((res)=>{
+                    window.location.reload()
+                })
+            }}>Créer</Button>
+        </div>
+      : <></>
+      }
+      
     </div>
         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
            {files.map((file, index)=>(
@@ -112,7 +149,7 @@ function File({name, deleteFile}){
         onClick={()=>deleteFile(name)}
         style={{
             position: "absolute",
-            marginLeft: "100px",
+            marginLeft: "80px",
             marginTop: "5px",
             display: open ? "block" : "none",
             color: "red"

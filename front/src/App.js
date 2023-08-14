@@ -20,6 +20,7 @@ function App() {
       <Route path="/eleves" element={<Drawer><ElevesSplitter /></Drawer>} />
       <Route path="/parents" element={<Drawer><ParentAdminComponent /></Drawer>} />
       <Route path="/profs" element={<Drawer><ProfAdminComponent /></Drawer>} />
+      <Route path="/classe" element={<Drawer><ProfAdminComponent /></Drawer>} />
       <Route path="/espacepersonnel" element={<Drawer><EspaceEleveComponent /></Drawer>} />
       <Route path="/cours/:id/chapitres" element={<Drawer><CoursComponent /></Drawer>} />
       <Route path="/cours/:id/chapitres/new" element={<Drawer><ChapitreForm /></Drawer>} />

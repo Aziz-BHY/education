@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const multer  = require('multer')
 const fs = require('fs');
-const storage = multer.diskStorage({
+
+const storageCours = multer.diskStorage({
   destination: function (req, file, cb) {
     let path = `./uploads/cours/${req.params.coursId}/chapitres/${req.params.chapitreId}/`
     fs.mkdirSync(path, { recursive: true })
@@ -12,16 +13,35 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
-const upload =  multer({ storage: storage }).array("file");
+const uploadCours =  multer({ storage: storageCours }).array("file");
+
+const storageStudent = multer.diskStorage({
+  destination: function (req, file, cb) {
+    console.log(req)
+    let path = `./uploads/students/${req.params.studentId}/${req.query.path}`
+    fs.mkdirSync(path, { recursive: true })
+    cb(null, path);
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const uploadStudent =  multer({ storage: storageStudent }).single("file");
+
 const {
   addContent
 } = require("../controllers/chapireController");
 const {
  getFolder,
- deleteFile
+ deleteFile,
+ createFile,
+ createFolder
 } = require("../controllers/espaceController")
-router.post("/cours/:coursId/chapitres/:chapitreId/content", upload, addContent);
+
+router.post("/cours/:coursId/chapitres/:chapitreId/content", uploadCours, addContent);
 router.get("/student/:studentId", getFolder);
 router.delete("/student/:studentId", deleteFile);
+router.post("/student/:studentId/file", uploadStudent, createFile);
+router.post("/student/:studentId/folder", createFolder);
 
 module.exports = router;

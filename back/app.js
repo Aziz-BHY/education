@@ -7,6 +7,7 @@ const userRouter = require("./routes/userRoutes");
 const coursRouter = require("./routes/coursRoutes");
 const chapitreRouter = require("./routes/chapitreRoutes");
 const uploadRouter = require("./routes/uploadRoutes");
+const classeRouter = require("./routes/classeRoutes");
 const PORT = process.env.PORT || 5000;
 
 connectDB();
@@ -21,6 +22,7 @@ app.use("/users", userRouter);
 app.use("/cours", coursRouter);
 app.use("/chapitre", chapitreRouter);
 app.use("/upload", uploadRouter);
+app.use("/classe", classeRouter)
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });

@@ -63,7 +63,10 @@ const deleteFile = asyncHandler(async (req, res) => {
 
 const createFolder = asyncHandler(async (req, res) => {
   try{
-    
+    let path = "./uploads/students/"+req.params.studentId+"/"+req.body.path+"/"+req.body.folder
+    await fs.mkdirSync(path);
+    console.log(path)
+    res.json("folder created")
   }
   catch(err){
     res.json({
@@ -74,7 +77,8 @@ const createFolder = asyncHandler(async (req, res) => {
 
 const createFile = asyncHandler(async (req, res) => {
   try{
-    
+    console.log(req.body)
+    res.json("file created")
   }
   catch(err){
     res.json({
