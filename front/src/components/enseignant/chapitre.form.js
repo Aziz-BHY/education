@@ -7,13 +7,13 @@ export default function() {
     const [cours, setCours] = React.useState(null);
     const [titre, setTitre] = React.useState("");
     React.useEffect(() => {
-        axios.get(`http://localhost:5000/cours/${id}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/cours/${id}`)
             .then(res => setCours(res.data))
             .catch(err=> Navigate("/cours"))
     }, []);
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(`http://localhost:5000/chapitre/`, {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/chapitre/`, {
             title: titre,
             coursId: id
         })

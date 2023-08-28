@@ -6,16 +6,17 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-export default function({description, title, modifiable, coursId}) {
+export default function({description, title, modifiable, coursId, updateCours}) {
   const navigate = useNavigate();
 
   const deleteCours = ()=>{
-
+    axios.delete(`${process.env.REACT_APP_BACKEND_URL}/cours/${coursId}`).then(res=>{
+      window.location.reload();
+    })
   }
-  const updateCours = ()=>{
 
-  }
     return (
         <Card sx={{ maxWidth: 345 }}>
       <CardContent>
@@ -30,7 +31,7 @@ export default function({description, title, modifiable, coursId}) {
         {
           modifiable? 
           <>
-            <Button size="small" onClick={updateCours}>Modifier</Button>
+            <Button size="small" onClick={()=>updateCours(coursId)}>Modifier</Button>
             <Button size="small" onClick={deleteCours}>Supprimer</Button>
           </>:
           <>

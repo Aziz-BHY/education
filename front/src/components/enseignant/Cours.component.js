@@ -9,7 +9,7 @@ export default function() {
     const [cours, setCours] = React.useState(null);
 
     React.useEffect(() => {
-        axios.get(`http://localhost:5000/cours/${id}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/cours/${id}`)
             .then(res => {
                 setCours(res.data)
             }            

@@ -4,7 +4,7 @@ import CoursComponent from '../Cours.component';
 export default function({decodedToken}) {
     const [cours, setCours] = React.useState([]);
     React.useEffect(()=>{
-        axios.get(`http://localhost:5000/cours/teacher/${decodedToken?.id}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/cours/teacher/${decodedToken?.id}`)
         .then(res => {
             setCours(res.data);
         }).catch(err=>

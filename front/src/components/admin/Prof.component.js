@@ -57,9 +57,29 @@ export default function() {
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
     const [open, setOpen] = React.useState(false)
+    const [id, setId] = React.useState("")
     const [rowSelectionModel, setRowSelectionModel] = React.useState([])
     const Submit = ()=>{
-        axios.post("http://localhost:5000/users", {
+      if(!name || !email || !password){
+        alert("Veuillez remplir tous les champs")
+        return;
+      }
+      if(id){
+        axios.put(`${process.env.REACT_APP_BACKEND_URL}/users/${id}`, {
+          email,
+          name,
+          password,
+      }).then(res =>{
+          setName("")
+          setEmail("")
+          setPassword("")
+          setId("")
+          setOpen(false)
+      }).catch(err=>{
+          console.error(err)
+      })
+      }else{
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/users`, {
             email,
             name,
             password,
@@ -69,21 +89,47 @@ export default function() {
         }).catch(err=>{
             console.err(err)
         })
+      }
     }
     React.useEffect(()=>{
-        axios.get('http://localhost:5000/users/teacher').then(res => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/users/teacher`).then(res => {
             setProfs(res.data);
     }).catch(err => {
         console.log(err);
     })
     }, [])
+    const deleteUser = ()=>{
+      let promises = []
+      for(let user in rowSelectionModel){
+        promises.push(axios.delete(`${process.env.REACT_APP_BACKEND_URL}/users/${rowSelectionModel[user]}`))
+      }
+      Promise.all(promises).then(res=>{
+        window.location.reload()
+      
+      })
+    }
+
+    const updateUser = ()=>{
+      let prof = profs.find(e=>e._id === rowSelectionModel[0])
+      setName(prof.name)
+      setEmail(prof.email)
+      setId(prof._id)
+      setOpen(true)
+
+    }
     return (
         <>
-        <Button disabled={rowSelectionModel.length === 0} variant="contained" color="error" onClick={()=>setOpen(true)}>Supprimer</Button>
-        <Button disabled={rowSelectionModel.length != 1} variant="contained" onClick={()=>setOpen(true)}>Modifier</Button>
-        <Table rows={columns} data={profs} rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel}/>
+        <Button disabled={rowSelectionModel.length === 0} variant="contained" color="error" onClick={deleteUser}>Supprimer</Button>
+        <Button disabled={rowSelectionModel.length != 1} variant="contained" onClick={updateUser}>Modifier</Button>
+        <Table columns={columns} data={profs} rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel}/>
         <BootstrapDialog
-        onClose={()=>setOpen(false)}
+        onClose={()=>{
+          setName("")
+          setEmail("")
+          setPassword("")
+          setId("")
+          setOpen(false)
+        }}
         aria-labelledby="customized-dialog-title"
         open={open}
       >
@@ -91,8 +137,8 @@ export default function() {
           Ajouter un cours
             </BootstrapDialogTitle>
             <DialogContent dividers>
-            <input type="text" placeholder="nom" onChange={(e)=>setName(e.target.value)}/>
-            <input type="text" placeholder="email" onChange={(e)=>setEmail(e.target.value)} />
+            <input type="text" placeholder="nom" onChange={(e)=>setName(e.target.value)} value={name}/>
+            <input type="text" placeholder="email" onChange={(e)=>setEmail(e.target.value)} value={email}/>
             <input type="text" placeholder="password" onChange={(e)=>setPassword(e.target.value)} />
             </DialogContent>
             <DialogActions>

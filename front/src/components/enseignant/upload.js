@@ -25,7 +25,7 @@ export default function() {
         }
         formData.append('type', type);
         formData.append('description', description);
-        axios.post(`http://localhost:5000/upload/cours/${idCours}/chapitres/${idchapitre}/content`, formData)
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/cours/${idCours}/chapitres/${idchapitre}/content`, formData)
             .then(res => console.log(res.data))
             .catch(err => console.error(err))
     }

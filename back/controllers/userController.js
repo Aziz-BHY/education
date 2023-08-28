@@ -60,7 +60,46 @@ const getUsers = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteUser = asyncHandler(async (req, res) => {
+
+  try{
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      res.status(400);
+      throw new Error("User not found");
+    }
+    await user.deleteOne({_id: req.params.id});
+    res.json({ id: req.params.id });
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    });
+  }
+})
+
+const updateUser = asyncHandler(async (req, res) => {
+  try{
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      res.status(400);
+      throw new Error("User not found");
+    }
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(updatedUser);
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    });
+  }
+})
+
 module.exports = {
     createUser,
-    getUsers
+    getUsers,
+    deleteUser,
+    updateUser
 };

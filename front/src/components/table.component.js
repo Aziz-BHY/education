@@ -7,7 +7,7 @@ const columns = [
   
 ];
 
-export default function DataTable({data, rowSelectionModel, setRowSelectionModel}) {
+export default function DataTable({data, rowSelectionModel, setRowSelectionModel ,columns}) {
     return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid

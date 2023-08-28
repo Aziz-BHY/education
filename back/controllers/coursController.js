@@ -60,7 +60,7 @@ const deleteCours = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error("Cours not found");
       }
-      await cours.remove();
+      await cours.deleteOne({_id: req.params.id});
       res.json({
         message: "Cours removed"
       });

@@ -12,7 +12,7 @@ export default function Login() {
     }
 
     const login = async () => {
-        const res = await axios.post("http://localhost:5000/auth", {
+        const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
             email,
             password
         });

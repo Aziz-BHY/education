@@ -52,14 +52,15 @@ export default function() {
     const [title, setTitle] = React.useState("");
     const [description, setDescription] = React.useState("");
     const [prof, setProf] = React.useState("");
+    const [id, setId] = React.useState("");
     React.useEffect(() => {
-        axios.get('http://localhost:5000/cours')
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/cours`)
             .then(res => {
                 setCours(res.data);
                 console.log(res.data)
             }
         )
-        axios.get('http://localhost:5000/users/teacher')
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/users/teacher`)
             .then(res => {
                 setProfs(res.data);
             }
@@ -67,31 +68,45 @@ export default function() {
     }, [])
 
     const Submit = () => {
-        axios.post('http://localhost:5000/cours', {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/cours`, {
             name: title,
             description: description,
             teacher: prof
         })
         setOpen(false);
     }
+    const updateCours = (id)=>{
+      let cours1 = cours.filter(c => c._id === id);
+      setTitle(cours1[0].name);
+      setDescription(cours1[0].description);
+      setProf(cours1[0].teacher);
+      setId(id);
+      setOpen(true);
+    }
     return (
         <>
 
             {cours.map(c => (
-               <CoursComponent key={c.id} description={c.description} title={c.name} modifiable={true} coursId={c.id}/>
+               <CoursComponent key={c.id} description={c.description} title={c.name} modifiable={true} coursId={c._id} updateCours={updateCours}/>
             ))}
             <BootstrapDialog
-        onClose={()=>setOpen(false)}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
+            onClose={()=>{
+              setOpen(false);
+              setId("");
+              setTitle("");
+              setDescription("");
+              setProf("");
+            }}
+            aria-labelledby="customized-dialog-title"
+            open={open}
+          >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={()=>setOpen(false)}>
           Ajouter un cours
             </BootstrapDialogTitle>
             <DialogContent dividers>
-            <input type="text" placeholder="Titre" onChange={(e)=>setTitle(e.target.value)}/>
-            <input type="text" placeholder="Description" onChange={(e)=>setDescription(e.target.value)} />
-            <select onChange={(e)=>setProf(e.target.value)}>
+            <input type="text" placeholder="Titre" onChange={(e)=>setTitle(e.target.value)} value={title}/>
+            <input type="text" placeholder="Description" onChange={(e)=>setDescription(e.target.value)} value={description} />
+            <select onChange={(e)=>setProf(e.target.value)} value={prof}>
                 <option value={""}>---Choisir un professeur---</option>
                 {profs.map(p => (
                     <option key={p._id} value={p._id}>{p.name}</option>

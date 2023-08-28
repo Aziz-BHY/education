@@ -33,14 +33,8 @@ const deleteClasse = asyncHandler(async (req, res) => {
 
 const updateClasse = asyncHandler(async (req, res) => {
     try{
-        Classe.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, classe) => {
-            if(err){
-            res.json({
-              error: err.message
-            })
-          }
-          res.json(classe);        
-        })
+        let classe = await Classe.findByIdAndUpdate(req.params.id, req.body, {new: true})
+        res.json(classe);
     }
       catch(err){
         res.json({
@@ -75,11 +69,35 @@ const addCoursToClasse = asyncHandler(async (req, res) => {
         })
       }
 })
+const getClasse = asyncHandler(async (req, res) => {
+  try{
+    const classe = await Classe.findById(req.params.id);
+    res.json(classe);
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    })
+  }
+})
 
+const getClasses = asyncHandler(async (req, res) => {
+  try{
+    const classes = await Classe.find();
+    res.json(classes);
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    })
+  }
+})
 module.exports = {
     createClasse,
     deleteClasse,
     updateClasse,
     addStudentToClasse,
-    addCoursToClasse
-};
+    addCoursToClasse,
+    getClasse,
+    getClasses
+}

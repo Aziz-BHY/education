@@ -13,6 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import Table from "../table.component"
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
       padding: theme.spacing(2),
@@ -24,7 +25,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   
   function BootstrapDialogTitle(props) {
     const { children, onClose, ...other } = props;
-    
+  
     return (
       <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
         {children}
@@ -47,62 +48,53 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   }
 
 const columns = [
-    { field: 'name', headerName: 'Nom', width: 130 },
-    { field: 'email', headerName: 'Email', width: 250 },
-    
+    { field: 'name', headerName: 'Nom', width: 130 },    
 ];
 
 export default function() {
-    const [parents, setParents] = React.useState([]);
+    const [classes, setClasses] = React.useState([]);
     const [name, setName] = React.useState("")
-    const [email, setEmail] = React.useState("")
-    const [password, setPassword] = React.useState("")
     const [open, setOpen] = React.useState(false)
-    const [rowSelectionModel, setRowSelectionModel] = React.useState([])
     const [id, setId] = React.useState("")
+    const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
     const Submit = ()=>{
-      if(!name || !email || !password){
+      if(!name){
         alert("Veuillez remplir tous les champs")
         return;
       }
       if(id){
-        axios.put(`${process.env.REACT_APP_BACKEND_URL}/users/${id}`, {
-          email,
+        axios.put(`${process.env.REACT_APP_BACKEND_URL}/classe/${id}`, {
           name,
-          password,
       }).then(res =>{
+        console.log(res.data)
           setName("")
-          setEmail("")
-          setPassword("")
           setId("")
           setOpen(false)
       }).catch(err=>{
           console.error(err)
       })
       }else{
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/users`, {
-            email,
-            name,
-            password,
-            role: "parent"
-        }).then(res =>{
-            setOpen(false)
-        }).catch(err=>{
-            console.err(err)
-        })
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/classe`, {
+          name,
+      }).then(res =>{
+          setOpen(false)
+      }).catch(err=>{
+          console.error(err)
+      })
       }
     } 
     React.useEffect(()=>{
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/users/parent`).then(res => {
-            setParents(res.data);
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/classe`).then(res => {
+            setClasses(res.data);
     }).catch(err => {
         console.log(err);
     })
     }, [])
+
     const deleteUser = ()=>{
       let promises = []
-      for(let user in rowSelectionModel){
-        promises.push(axios.delete(`${process.env.REACT_APP_BACKEND_URL}/users/${rowSelectionModel[user]}`))
+      for(let classe in rowSelectionModel){
+        promises.push(axios.delete(`${process.env.REACT_APP_BACKEND_URL}/classe/${rowSelectionModel[classe]}`))
       }
       Promise.all(promises).then(res=>{
         window.location.reload()
@@ -110,43 +102,38 @@ export default function() {
       })
     }
     const updateUser = ()=>{
-      let parent = parents.find(e=>e._id === rowSelectionModel[0])
-      setName(parent.name)
-      setEmail(parent.email)
-      setId(parent._id)
+      let classe = classes.find(e=>e._id === rowSelectionModel[0])
+      setName(classe.name)
+      setId(classe._id)
       setOpen(true)
-      console.log(parent)
+
     }
+    
     return (
         <>
         <Button disabled={rowSelectionModel.length === 0} variant="contained" color="error" onClick={deleteUser}>Supprimer</Button>
         <Button disabled={rowSelectionModel.length != 1} variant="contained" onClick={updateUser}>Modifier</Button>
-        <Table columns={columns} data={parents} rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel}/>
+        <Table columns={columns} data={classes} rowSelectionModel={rowSelectionModel} setRowSelectionModel={setRowSelectionModel} />
         <BootstrapDialog
         onClose={()=>{
-          setEmail("")
-          setPassword("")
-          setId("")
           setName("")
-          setOpen(false)
-        }}
+          setId("")
+          setOpen(false)}}
         aria-labelledby="customized-dialog-title"
         open={open}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={()=>setOpen(false)}>
-          Ajouter un cours
+          Ajouter une classe
             </BootstrapDialogTitle>
             <DialogContent dividers>
             <input type="text" placeholder="nom" onChange={(e)=>setName(e.target.value)} value={name}/>
-            <input type="text" placeholder="email" onChange={(e)=>setEmail(e.target.value)} value={email}/>
-            <input type="text" placeholder="password" onChange={(e)=>setPassword(e.target.value)} />
             </DialogContent>
             <DialogActions>
             <Button autoFocus onClick={()=>Submit()}>
                 Terminer
             </Button>
             </DialogActions>
-            </BootstrapDialog>
+        </BootstrapDialog>
             <Avatar
              sx={{ bgcolor: "#2566cb", width: "50px", height: "50px"  }}
              onClick={() => setOpen(true)}

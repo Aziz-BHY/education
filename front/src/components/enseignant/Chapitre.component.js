@@ -9,18 +9,18 @@ export default function({chapitre, coursId}) {
     const [title, setTitle] = React.useState(chapitre.title);
 
     const deleteChapitre = (chapitreId) => {
-        axios.delete(`http://localhost:5000/chapitre/${chapitreId}`)
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/chapitre/${chapitreId}`)
             .then(res => window.location.reload())
             .catch(err => console.error(err))
     }
     const deleteContent = (chapitreId, contentId) => {
-        axios.delete(`http://localhost:5000/chapitre/${chapitreId}/content/${contentId}`)
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/chapitre/${chapitreId}/content/${contentId}`)
             .then(res => console.log(res.data))
             .catch(err => console.error(err))
     }
     const modifierChapitre = (chapitreId, titre) => {
         if(title)
-        axios.put(`http://localhost:5000/chapitre/${chapitreId}`, { title })
+        axios.put(`${process.env.REACT_APP_BACKEND_URL}/chapitre/${chapitreId}`, { title })
             .then(res => {
                 window.location.reload()
             })

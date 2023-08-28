@@ -17,12 +17,12 @@ export default function() {
         getFiles(path)
     }, [path])
     const deleteFile = (filename) => {
-        axios.delete("http://localhost:5000/upload/student/64cd2f31bab78984a73ecc99?path="+path+"/"+filename).then((res)=>{
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99?path=${path}/${filename}`).then((res)=>{
             window.location.reload()
         })
     }
     const getFiles = (path) => {
-        axios.get("http://localhost:5000/upload/student/64cd2f31bab78984a73ecc99?path="+path).then((res)=>{
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99?path=${path}`).then((res)=>{
             setFiles(res.data)
         })   
     }
@@ -67,7 +67,7 @@ export default function() {
                 const formData = new FormData();
                 formData.append('file', e.target.files[0])
                 formData.append('path', path)
-                axios.post(`http://localhost:5000/upload/student/64cd2f31bab78984a73ecc99/file?path=${path}`, formData)
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99/file?path=${path}`, formData)
                 .then(res => window.location.reload())
                 .catch(err => console.error(err))
             }}/>
@@ -82,7 +82,7 @@ export default function() {
                 if(!folderName){
                     return
                 }
-                axios.post("http://localhost:5000/upload/student/64cd2f31bab78984a73ecc99/folder", {
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99/folder`, {
                     path: path,
                     folder: folderName
                 }).then((res)=>{

@@ -6,11 +6,13 @@ const {
     deleteClasse,
     updateClasse,
     addStudentToClasse,
-    addCoursToClasse
+    addCoursToClasse,
+    getClasse,
+    getClasses
 } = require("../controllers/classeController");
 
-router.route("/").post(createClasse);
-router.route("/:id").delete(deleteClasse).put(updateClasse);
+router.route("/").post(createClasse).get(getClasses);
+router.route("/:id").delete(deleteClasse).put(updateClasse).get(getClasse);
 router.route("/:id/student").post(addStudentToClasse);
 router.route("/:id/cours").post(addCoursToClasse);
 
