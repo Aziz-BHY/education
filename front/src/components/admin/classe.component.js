@@ -102,10 +102,11 @@ export default function() {
       })
     }
     const updateUser = ()=>{
-      let classe = classes.find(e=>e._id === rowSelectionModel[0])
+     /* let classe = classes.find(e=>e._id === rowSelectionModel[0])
       setName(classe.name)
       setId(classe._id)
-      setOpen(true)
+      setOpen(true)*/
+      window.location.href = `/classe/${rowSelectionModel[0]}`
 
     }
     

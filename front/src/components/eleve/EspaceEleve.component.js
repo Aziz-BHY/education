@@ -6,7 +6,11 @@ import Typography from '@mui/material/Typography';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Button } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { useJwt } from "react-jwt";
+import { useCookies } from 'react-cookie';
 export default function() {
+    const [cookies] = useCookies(['education']);
+    const { decodedToken } = useJwt(cookies.education);
     const [files, setFiles] = React.useState([])
     const [path, setPath] = React.useState("")
     const [showFile, setShowFile] = React.useState(false);
@@ -15,14 +19,15 @@ export default function() {
     const [file, setFile] = React.useState("");
     React.useEffect(()=>{
         getFiles(path)
-    }, [path])
+    }, [path, decodedToken])
     const deleteFile = (filename) => {
-        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99?path=${path}/${filename}`).then((res)=>{
+        axios.delete(`${process.env.REACT_APP_BACKEND_URL}/upload/student/${decodedToken?.id}?path=${path}/${filename}`).then((res)=>{
             window.location.reload()
         })
     }
     const getFiles = (path) => {
-        axios.get(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99?path=${path}`).then((res)=>{
+        if(!decodedToken) return;
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/upload/student/${decodedToken?.id}?path=${path}`).then((res)=>{
             setFiles(res.data)
         })   
     }
@@ -67,7 +72,7 @@ export default function() {
                 const formData = new FormData();
                 formData.append('file', e.target.files[0])
                 formData.append('path', path)
-                axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99/file?path=${path}`, formData)
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/student/${decodedToken?.id}/file?path=${path}`, formData)
                 .then(res => window.location.reload())
                 .catch(err => console.error(err))
             }}/>
@@ -82,7 +87,7 @@ export default function() {
                 if(!folderName){
                     return
                 }
-                axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/student/64cd2f31bab78984a73ecc99/folder`, {
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/student/${decodedToken?.id}/folder`, {
                     path: path,
                     folder: folderName
                 }).then((res)=>{

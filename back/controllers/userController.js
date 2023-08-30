@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
+const fs = require("fs");
 
 // @desc    Register a new user
 // @route   POST /api/users
@@ -30,6 +31,9 @@ const createUser = asyncHandler(async (req, res) => {
   });
 
   if (user) {
+    if(user.role == "student"){
+      await fs.mkdirSync(`./uploads/students/${user._id}`);
+    }
     res.status(201).json({
       _id: user._id,
       name: user.name,

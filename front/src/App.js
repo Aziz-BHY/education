@@ -11,6 +11,8 @@ import ChapitreForm from "./components/enseignant/chapitre.form";
 import UploadContenu from "./components/enseignant/upload";
 import ClasseAdminComponent from "./components/admin/classe.component";
 import Test from "./components/test"
+import ClasseDetailAdminComponent from "./components/admin/classeDetail.component";
+
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
       <Route path="/parents" element={<Drawer><ParentAdminComponent /></Drawer>} />
       <Route path="/profs" element={<Drawer><ProfAdminComponent /></Drawer>} />
       <Route path="/classe" element={<Drawer><ClasseAdminComponent /></Drawer>} />
+      <Route path="/classe/:id" element={<Drawer><ClasseDetailAdminComponent /></Drawer>} />
       <Route path="/espacepersonnel" element={<Drawer><EspaceEleveComponent /></Drawer>} />
       <Route path="/cours/:id/chapitres" element={<Drawer><CoursComponent /></Drawer>} />
       <Route path="/cours/:id/chapitres/new" element={<Drawer><ChapitreForm /></Drawer>} />

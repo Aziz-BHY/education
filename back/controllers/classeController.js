@@ -44,8 +44,8 @@ const updateClasse = asyncHandler(async (req, res) => {
 })
 const addStudentToClasse = asyncHandler(async (req, res) => {
     try{
-        let classe = await Classe.findById(req.body.coursId);
-        let student = await User.findById(req.body.studentId);
+        let classe = await Classe.findById(req.body.classe);
+        let student = await User.findById(req.body.student);
         classe.students.push(student);
         classe = await classe.save();
         res.json(classe);
@@ -58,10 +58,11 @@ const addStudentToClasse = asyncHandler(async (req, res) => {
 })
 const addCoursToClasse = asyncHandler(async (req, res) => {
     try{
-        let classe = await Classe.findById(req.body.coursId);
-        let cours = await Cours.findById(req.body.coursId);
+        let classe = await Classe.findById(req.body.classe);
+        let cours = await Cours.findById(req.body.cours);
         classe.cours.push(cours);
         classe = await classe.save();
+        res.json(classe);
       }
       catch(err){
         res.json({
@@ -71,8 +72,8 @@ const addCoursToClasse = asyncHandler(async (req, res) => {
 })
 const getClasse = asyncHandler(async (req, res) => {
   try{
-    const classe = await Classe.findById(req.params.id);
-    res.json(classe);
+    const classe = await Classe.findById(req.params.id).populate("students", ["_id", "name", "email"]).populate("cours", ["_id", "name"]).exec();
+    res.json(classe)
   }
   catch(err){
     res.json({
@@ -92,6 +93,34 @@ const getClasses = asyncHandler(async (req, res) => {
     })
   }
 })
+
+const deleteStudentFromClasse = asyncHandler(async (req, res) => {
+  try{
+    let classe = await Classe.findById(req.body.classe);
+    classe.students.pull(req.body.student);
+    classe = await classe.save();
+    res.json(classe);
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    })
+  }
+})
+
+const deleteCoursFromClasse = asyncHandler(async (req, res) => {
+  try{
+    let classe = await Classe.findById(req.body.classe);
+    classe.cours.pull(req.body.classe);
+    classe = await classe.save();
+    res.json(classe);
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    })
+  }
+})
 module.exports = {
     createClasse,
     deleteClasse,
@@ -99,5 +128,7 @@ module.exports = {
     addStudentToClasse,
     addCoursToClasse,
     getClasse,
-    getClasses
+    getClasses,
+    deleteCoursFromClasse,
+    deleteStudentFromClasse
 }
