@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import { Viewer } from '@react-pdf-viewer/core';
 import Dialog from '@mui/material/Dialog';
-export default function MyApp({ fileUrl}) {
+export default function MyApp({fileUrl}) {
   const [open, setOpen] = useState(true);
   const handleClose = () => {
     setOpen(false);

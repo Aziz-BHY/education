@@ -7,14 +7,16 @@ import { useCookies } from 'react-cookie';
 export default function() {
     const [cookies] = useCookies(['education']);
     const { decodedToken } = useJwt(cookies.education);
-
+    console.log(decodedToken?.role)
     if(decodedToken?.role == "admin"){
             return(
                 <CoursAdminComponent />
             )
         }
-        if(decodedToken?.role == "student"){        
-            <CoursEleveComponent decodedToken={decodedToken} />
+        if(decodedToken?.role == "student"){ 
+            return(
+                <CoursEleveComponent decodedToken={decodedToken} />
+            )
         }
         if(decodedToken?.role == "teacher"){
             return(

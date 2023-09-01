@@ -8,10 +8,9 @@ export default function({decodedToken}) {
     React.useEffect(()=>{
         axios.get(`${process.env.REACT_APP_BACKEND_URL}/cours/student/${decodedToken?.id}`).then(res => setCours(res.data)).catch(err => console.log(err))
     }, [])   
-    console.log(decodedToken?.role)
     return(
         <>
-            {cours.map(c => <CoursComponent />)}
+            {cours.map(c => <CoursComponent key={c._id} description={c.description} title={c.name} modifiable={false} coursId={c._id} />)}
         </>
     )
 }

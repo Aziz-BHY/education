@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 var jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const Cours = require("../models/coursModel");
+const Classe = require("../models/classeModel");
 
 const createCours = asyncHandler(async (req, res) => {
   try{
@@ -91,13 +92,13 @@ const getCoursById = asyncHandler(async (req, res) => {
 
 const getCoursBystudentId = asyncHandler(async (req, res) => {
     try{
-        const cours = await Cours.find({students: req.params.id});
-      if(!cours){
+       const classe = await Classe.findOne({students: req.params.id}).populate("cours", "name description").exec();
+       if(!classe){
         res.status(400);
-        throw new Error("Cours not found");
+        throw new Error("Classe not found");
+       }
+       res.json(classe.cours)
       }
-      res.json(cours);
-    }
     catch(err){
       res.json({
         error: err.message

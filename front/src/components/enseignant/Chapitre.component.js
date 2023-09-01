@@ -3,11 +3,13 @@ import axios from 'axios';
 import * as React from 'react';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-
+import { useJwt } from "react-jwt";
+import { useCookies } from 'react-cookie';
 export default function({chapitre, coursId}) {
     const [modify, setModify] = React.useState(false);
     const [title, setTitle] = React.useState(chapitre.title);
-
+    const [cookies] = useCookies(['education']);
+    const { decodedToken } = useJwt(cookies.education);
     const deleteChapitre = (chapitreId) => {
         axios.delete(`${process.env.REACT_APP_BACKEND_URL}/chapitre/${chapitreId}`)
             .then(res => window.location.reload())
@@ -42,10 +44,13 @@ export default function({chapitre, coursId}) {
                         <h2>{chapitre.title}</h2>
                     } 
 
-                    
+                    {decodedToken?.role == "teacher"?<>
                     <Button variant="contained" color="primary" onClick={()=>{setModify(true)}}>Modifier</Button>
                     <Button variant="contained" color="error" onClick={()=>deleteChapitre(chapitre._id)}>Supprimer</Button>
                     <Button variant="contained" color="primary" onClick={()=>{window.location.href = `/cours/${coursId}/chapitres/${chapitre._id}/contenu`}}>Ajouter contenu</Button>
+                    </>
+                    :<></> }
+                    
                     <hr />
                     {
                     chapitre.content.map((contenu, index) => (
@@ -54,8 +59,10 @@ export default function({chapitre, coursId}) {
                             {contenu.files.map((file, index) => (
                                 <div>{file}</div>
                                 ))}
+                              {decodedToken?.role == "teacher"?<>
                             <Button variant="contained" color="primary">Modifier</Button>
                             <Button variant="contained" color="error" onClick={()=>deleteContent(chapitre._id, contenu._id)}>Supprimer</Button>
+                            </>:<></>}
                             <hr />
                         </div>
                     ))}
