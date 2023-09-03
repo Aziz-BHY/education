@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const connectDB = require("./config/db");
+const InitAdmin = require("./config/init");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
 const coursRouter = require("./routes/coursRoutes");
@@ -12,7 +13,7 @@ const fileRouter = require("./routes/filesRoutes");
 const PORT = process.env.PORT || 5000;
 
 connectDB();
-
+InitAdmin();
 const app = express();
 
 app.use(express.json());

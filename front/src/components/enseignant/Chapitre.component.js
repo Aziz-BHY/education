@@ -17,7 +17,7 @@ export default function({chapitre, coursId}) {
     }
     const deleteContent = (chapitreId, contentId) => {
         axios.delete(`${process.env.REACT_APP_BACKEND_URL}/chapitre/${chapitreId}/content/${contentId}`)
-            .then(res => console.log(res.data))
+            .then(res => window.location.reload())
             .catch(err => console.error(err))
     }
     const modifierChapitre = (chapitreId, titre) => {
@@ -60,7 +60,7 @@ export default function({chapitre, coursId}) {
                                 <div>{file}</div>
                                 ))}
                               {decodedToken?.role == "teacher"?<>
-                            <Button variant="contained" color="primary">Modifier</Button>
+                            <Button variant="contained" color="primary" onClick={()=>{window.location.href = `/cours/${coursId}/chapitres/${chapitre._id}/contenu/${contenu._id}`}}>Modifier</Button>
                             <Button variant="contained" color="error" onClick={()=>deleteContent(chapitre._id, contenu._id)}>Supprimer</Button>
                             </>:<></>}
                             <hr />

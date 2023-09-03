@@ -17,7 +17,6 @@ const uploadCours =  multer({ storage: storageCours }).array("file");
 
 const storageStudent = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log(req)
     let path = `./uploads/students/${req.params.studentId}/${req.query.path}`
     fs.mkdirSync(path, { recursive: true })
     cb(null, path);
@@ -29,7 +28,8 @@ const storageStudent = multer.diskStorage({
 const uploadStudent =  multer({ storage: storageStudent }).single("file");
 
 const {
-  addContent
+  addContent,
+  updateContent
 } = require("../controllers/chapireController");
 const {
  getFolder,
@@ -39,6 +39,7 @@ const {
 } = require("../controllers/espaceController")
 
 router.post("/cours/:coursId/chapitres/:chapitreId/content", uploadCours, addContent);
+router.put("/cours/:coursId/chapitres/:chapitreId/content/:contentId", uploadCours, updateContent);
 router.get("/student/:studentId", getFolder);
 router.delete("/student/:studentId", deleteFile);
 router.post("/student/:studentId/file", uploadStudent, createFile);

@@ -119,10 +119,58 @@ const addContent = asyncHandler(async (req, res) => {
   }
 })
 
+const getContent = asyncHandler(async (req, res) => {
+  try{
+    const chapitre = await Chapitre.findById(req.params.chapitreId);
+    if(chapitre){
+      for(let i = 0; i < chapitre.content.length; i++){
+        if(chapitre.content[i]._id == req.params.contentId){
+          return res.json(chapitre.content[i]);
+        }
+      }
+      res.status(404);
+      throw new Error("Content not found");
+    }
+    else{
+      res.status(404);
+      throw new Error("Chapitre not found");
+    }
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    })
+  }
+})
+
+const updateContent = asyncHandler(async (req, res) => {
+  try{
+    const chapitre = await Chapitre.findById(req.params.chapitreId);
+    for(let i = 0; i < chapitre.content.length; i++){
+      if(chapitre.content[i]._id == req.params.contentId){
+        chapitre.content[i].type = req.body.type;
+        chapitre.content[i].description = req.body.description;
+        chapitre.content[i].files = req.files.map(file => file.filename);
+        await chapitre.save();
+        return res.json(chapitre.content[i]);
+      }
+    }
+    res.status(404);
+    throw new Error("Content not found");
+  }
+  catch(err){
+    res.json({
+      error: err.message
+    })
+  }
+})
+
 module.exports = {
     updateChapitre,
     CreateChapitre,
     addContent,
     deleteContent,
     deleteChapitre,
+    getContent,
+    updateContent
 };

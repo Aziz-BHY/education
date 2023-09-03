@@ -10,11 +10,21 @@ import Paper from '@mui/material/Paper';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useParams } from 'react-router-dom';
 export default function() {
-    const { idchapitre, idCours } = useParams();
+    const { idchapitre, idcours, idContenu } = useParams();
     const [files, setFiles] = React.useState([]);
     const [type, setType] = React.useState("");
     const [description, setDescription] = React.useState("");
-    //delete file
+    
+    React.useEffect(() => {
+        axios.get(`${process.env.REACT_APP_BACKEND_URL}/chapitre/${idchapitre}/content/${idContenu}`)
+            .then(res => {
+                setType(res.data.type)
+                setDescription(res.data.description)
+                
+            })
+            .catch(err => console.error(err))
+    }, [])
+
     const deleteFile = (index) => {
         setFiles(files.filter((file, i) => i !== index));
     }
@@ -25,19 +35,29 @@ export default function() {
         }
         formData.append('type', type);
         formData.append('description', description);
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/cours/${idCours}/chapitres/${idchapitre}/content`, formData)
-            .then(res => console.log(res.data))
+        if(!idContenu){
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload/cours/${idcours}/chapitres/${idchapitre}/content`, formData)
+            .then(res => {
+                window.history.back(); 
+            })
             .catch(err => console.error(err))
+        }
+        else{
+            axios.put(`${process.env.REACT_APP_BACKEND_URL}/upload/cours/${idcours}/chapitres/${idchapitre}/content/${idContenu}`, formData)
+            .then(res => {
+                window.history.back(); 
+            }).catch(err => console.error(err))
+        }
     }
     return(
         <div>
-            <select onChange={e => setType(e.target.value)}>
+            <select onChange={e => setType(e.target.value)} value={type}>
             <option>---Choisir un type---</option>
             <option>Cours</option>
             <option>Exercice</option>
             </select>
-            <input type="file" onChange={e => setFiles([...files, e.target.files[0]])}/> <br />
-            <textarea onChange={e => setDescription(e.target.value)}/> <br />
+            <input type="file" onChange={e => setFiles([...files, e.target.files[0]])} /> <br />
+            <textarea onChange={e => setDescription(e.target.value)} value={description} /> <br />
             <button onClick={sendFile}>Send</button>
             <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
