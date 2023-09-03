@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useJwt } from "react-jwt";
 import { useCookies } from 'react-cookie';
+import FileViewerDialog from "../FileViewerDialog"
 export default function() {
     const [cookies] = useCookies(['education']);
     const { decodedToken } = useJwt(cookies.education);
@@ -68,7 +69,6 @@ export default function() {
       {
         showFile ?
             <input type="file" name="file" id="file" onChange={e=>{
-                //setFile(e.target.files[0])
                 const formData = new FormData();
                 formData.append('file', e.target.files[0])
                 formData.append('path', path)
@@ -101,7 +101,7 @@ export default function() {
     </div>
         <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
            {files.map((file, index)=>(
-               file.isDirectory ? <Folder name={file.item} changeDir={changeDir} deleteFile={deleteFile}/> : <File name={file.item} deleteFile={deleteFile} />
+               file.isDirectory ? <Folder name={file.item} changeDir={changeDir} deleteFile={deleteFile}/> : <File name={file.item} deleteFile={deleteFile} fileUrl={`students/${decodedToken?.id}${path}/${file.item}`} />
            ))}
         </div>
         </>
@@ -138,9 +138,9 @@ function Folder({name, changeDir, deleteFile}){
     )
 }
 
-function File({name, deleteFile}){
+function File({name, deleteFile, fileUrl}){
     const [open, setOpen] = React.useState(false)
-    
+    const [showFile, setShowFile] = React.useState(false)
     return(
         <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}
         onMouseEnter={()=>{
@@ -159,8 +159,13 @@ function File({name, deleteFile}){
             display: open ? "block" : "none",
             color: "red"
         }} />
-        <InsertDriveFileIcon style={{width: "100px", height: "100px"}}  />
+        <InsertDriveFileIcon style={{width: "100px", height: "100px"}}  onClick={e=>{
+            if(e.detail == 2){
+                setShowFile(true)
+            }
+        }} />
         {name}
+        <FileViewerDialog fileUrl={fileUrl} open={showFile} setOpen={setShowFile} />
         </div>
     )
 } 

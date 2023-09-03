@@ -10,7 +10,6 @@ import CoursComponent from "./components/enseignant/Cours.component";
 import ChapitreForm from "./components/enseignant/chapitre.form";
 import UploadContenu from "./components/enseignant/contenu.component";
 import ClasseAdminComponent from "./components/admin/classe.component";
-import Test from "./components/test"
 import ClasseDetailAdminComponent from "./components/admin/classeDetail.component";
 
 
@@ -31,7 +30,6 @@ function App() {
       <Route path="/cours/:idcours/chapitres/:idchapitre/contenu" element={<Drawer><UploadContenu /></Drawer>} />
       <Route path="/cours/:idcours/chapitres/:idchapitre/contenu/:idContenu" element={<Drawer><UploadContenu /></Drawer>} />
       <Route path="/login" element={<Login />} />
-      <Route path="/test" element={<Test fileUrl={""}/>} />
       <Route path="*" element={<iframe id="js-media-frame" style={{ width: "500px", height: "500px"}} itemprop="associatedMedia" src="https://www.edumedia-sciences.com/fr/media/frame/675/?r=105623" class="embed__content"></iframe>} />"
         </Routes>
       </BrowserRouter>

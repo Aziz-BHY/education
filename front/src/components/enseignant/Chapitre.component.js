@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { useJwt } from "react-jwt";
 import { useCookies } from 'react-cookie';
+import File from "../file.icon"
 export default function({chapitre, coursId}) {
     const [modify, setModify] = React.useState(false);
     const [title, setTitle] = React.useState(chapitre.title);
@@ -56,9 +57,12 @@ export default function({chapitre, coursId}) {
                     chapitre.content.map((contenu, index) => (
                         <div key={index}>
                             <h3>{contenu.description}</h3>
+                            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                             {contenu.files.map((file, index) => (
-                                <div>{file}</div>
+                                <File key={index} name={file} fileUrl={`cours/${coursId}/chapitres/${chapitre._id}/${file}`}/>
                                 ))}
+                            </div>
+                            
                               {decodedToken?.role == "teacher"?<>
                             <Button variant="contained" color="primary" onClick={()=>{window.location.href = `/cours/${coursId}/chapitres/${chapitre._id}/contenu/${contenu._id}`}}>Modifier</Button>
                             <Button variant="contained" color="error" onClick={()=>deleteContent(chapitre._id, contenu._id)}>Supprimer</Button>
