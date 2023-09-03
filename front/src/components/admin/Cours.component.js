@@ -68,11 +68,27 @@ export default function() {
     }, [])
 
     const Submit = () => {
+      if(id){
+        axios.put(`${process.env.REACT_APP_BACKEND_URL}/cours/${id}`, {
+          name: title,
+          description: description,
+          teacher: prof
+      }).then(res=>{
+        
+      })
+      }else{
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/cours`, {
-            name: title,
-            description: description,
-            teacher: prof
-        })
+          name: title,
+          description: description,
+          teacher: prof
+      }).then(res=>{
+        
+      })
+      }
+        setTitle("")
+        setDescription("")
+        setProf("")
+        setId("")
         setOpen(false);
     }
     const updateCours = (id)=>{
