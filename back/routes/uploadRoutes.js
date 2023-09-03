@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer  = require('multer')
 const fs = require('fs');
+const {verfiyPermission} = require("../middlewares/permission");
 
 const storageCours = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -38,11 +39,11 @@ const {
  createFolder
 } = require("../controllers/espaceController")
 
-router.post("/cours/:coursId/chapitres/:chapitreId/content", uploadCours, addContent);
-router.put("/cours/:coursId/chapitres/:chapitreId/content/:contentId", uploadCours, updateContent);
-router.get("/student/:studentId", getFolder);
-router.delete("/student/:studentId", deleteFile);
-router.post("/student/:studentId/file", uploadStudent, createFile);
-router.post("/student/:studentId/folder", createFolder);
+router.post("/cours/:coursId/chapitres/:chapitreId/content", [(req, res, next)=>verfiyPermission(req, res, next, ["teacher"]), uploadCours], addContent);
+router.put("/cours/:coursId/chapitres/:chapitreId/content/:contentId", [(req, res, next)=>verfiyPermission(req, res, next, ["teacher"]), uploadCours], updateContent);
+router.get("/student/:studentId",(req, res, next)=>verfiyPermission(req, res, next, ["student"]), getFolder);
+router.delete("/student/:studentId",(req, res, next)=>verfiyPermission(req, res, next, ["student"]), deleteFile);
+router.post("/student/:studentId/file", [(req, res, next)=>verfiyPermission(req, res, next, ["student"]), uploadStudent], createFile);
+router.post("/student/:studentId/folder",(req, res, next)=>verfiyPermission(req, res, next, ["student"]),  createFolder);
 
 module.exports = router;

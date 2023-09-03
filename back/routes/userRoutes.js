@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const {verfiyPermission} = require("../middlewares/permission");
 const {
   createUser,
   getUsers,
@@ -8,7 +8,9 @@ const {
   updateUser,
 } = require("../controllers/userController");
 
-router.route("/").post(createUser);
-router.route("/:role").get(getUsers);
-router.route("/:id").delete(deleteUser).put(updateUser);
+router.post("/", (req, res, next)=>verfiyPermission(req, res, next, ["admin"]), createUser);
+router.get("/:role", (req, res, next)=>verfiyPermission(req, res, next, ["admin"]), getUsers);
+router.delete("/:id", (req, res, next)=>verfiyPermission(req, res, next, ["admin"]), deleteUser);
+router.put("/:id", (req, res, next)=>verfiyPermission(req, res, next, ["admin"]), updateUser);
+
 module.exports = router;

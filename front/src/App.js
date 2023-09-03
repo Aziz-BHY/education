@@ -11,9 +11,15 @@ import ChapitreForm from "./components/enseignant/chapitre.form";
 import UploadContenu from "./components/enseignant/contenu.component";
 import ClasseAdminComponent from "./components/admin/classe.component";
 import ClasseDetailAdminComponent from "./components/admin/classeDetail.component";
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+
 
 
 function App() {
+  const [cookies] = useCookies(['education']);
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.education}`;
   return (
     <BrowserRouter>
       <Routes>
