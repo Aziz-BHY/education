@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 var jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const { scryptSync, timingSafeEqual } = require("crypto");
+
 const auth = asyncHandler(async (req, res) => {
   try{
   const { email, password } = req.body;
@@ -14,7 +16,14 @@ const auth = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Email not Associated by any account");
   }
-  if (password === user.password) {
+  const [salt, hash] = user.password.split(".");
+  const inputHash = scryptSync(req.body.password, salt, 64).toString("hex");
+
+  const match = timingSafeEqual(Buffer.from(hash), Buffer.from(inputHash));
+
+  if (!match) {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
     const token = jwt.sign({
       id: user.id,
       name: user.name,
@@ -27,10 +36,6 @@ const auth = asyncHandler(async (req, res) => {
       message: "success",
       data: token,
     });
-  } else {
-    res.status(400);
-    throw new Error("Invalid credentials");
-  }
 }
   catch(err){
     res.json({

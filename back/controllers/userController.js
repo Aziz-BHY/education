@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const fs = require("fs");
-
+const { scryptSync, randomBytes } = require("crypto");
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
@@ -13,7 +13,6 @@ const createUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please include all fields");
   }
-
   // Find if user already exists
   const userExists = await User.findOne({ email });
 
@@ -21,12 +20,13 @@ const createUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User already exists");
   }
-
+  const salt = randomBytes(16).toString("hex");
+  const hash = scryptSync(password, salt, 64).toString("hex");
   // Create user
   const user = await User.create({
     name,
     email,
-    password,
+    password: `${salt}.${hash}`,
     role,
   });
 
