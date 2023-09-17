@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - dbdata6:/data/db
+  front:
+    image: front
+    ports:
+      - '3001:80'
+    environment:
+    - VAR=azeaze
+  back:
+    image: back
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./uploads:/app/uploads
+volumes:
+  dbdata6:
