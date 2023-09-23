@@ -4,22 +4,23 @@ services:
     image: mongo
     volumes:
       - dbdata6:/data/db
-    ports: 
-    - 27017:27017 
   front:
     image: front
-    ports:
-      - '3001:80'
     environment:
-    - REACT_APP_BACKEND_URL=http://localhost:5000
+    - REACT_APP_BACKEND_URL=https://einsteinacademyapi.online
   back:
     image: back
-    ports:
-      - '5000:5000'
     environment:
       - MONGO_URI=mongodb://mongodb:27017/
       - JWT_SECRET=secret
     volumes:
-      - ./uploads:/app/uploads
+      - ~/uploads:/app/uploads
+  nginx:
+    image: nginx
+    ports:
+    - 80:80
+    volumes:
+    - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    - ~/certs/live:/etc/letsencrypt/live/
 volumes:
   dbdata6:
