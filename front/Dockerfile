@@ -14,4 +14,4 @@ COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 COPY ./substitute_environment_variables.sh ./substitute_environment_variables.sh
 RUN chmod +x ./substitute_environment_variables.sh
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["./substitute_environment_variables.sh"]
