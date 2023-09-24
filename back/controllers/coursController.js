@@ -76,7 +76,7 @@ const deleteCours = asyncHandler(async (req, res) => {
 const getCoursById = asyncHandler(async (req, res) => {
     try{
         const cours = await Cours.findById(req.params.id)
-        .populate("teacher", "name email").populate("students", "name email").populate("chapitres", "title content").exec();
+        .populate("teacher", "name email").populate("chapitres", "title content").exec();
       if(!cours){
         res.status(400);
         throw new Error("Cours not found");
