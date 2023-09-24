@@ -16,7 +16,9 @@ const auth = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Email not Associated by any account");
   }
+
   const [salt, hash] = user.password.split(".");
+  console.log(salt, hash)
   const inputHash = scryptSync(req.body.password, salt, 64).toString("hex");
 
   const match = timingSafeEqual(Buffer.from(hash), Buffer.from(inputHash));

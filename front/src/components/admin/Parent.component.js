@@ -134,7 +134,7 @@ export default function() {
         open={open}
       >
         <BootstrapDialogTitle id="customized-dialog-title" onClose={()=>setOpen(false)}>
-          Ajouter un cours
+          Ajouter un Parent
             </BootstrapDialogTitle>
             <DialogContent dividers>
             <input type="text" placeholder="nom" onChange={(e)=>setName(e.target.value)} value={name}/>

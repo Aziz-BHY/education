@@ -89,7 +89,16 @@ const updateUser = asyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("User not found");
     }
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    let password = req.body.password
+    if(req.body.password){
+      const salt = randomBytes(16).toString("hex");
+      const hash = scryptSync(password, salt, 64).toString("hex");
+      password =  `${salt}.${hash}`
+    }
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+      ...req.body,
+      password: password
+    }, {
       new: true,
     });
     res.json(updatedUser);
