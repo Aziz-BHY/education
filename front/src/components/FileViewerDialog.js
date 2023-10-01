@@ -19,8 +19,8 @@ export default function FileViewerDialog({fileUrl, open, setOpen}) {
   }
 
   return (
-    <Dialog onClose={handleClose} open={open}>
-      <div style={{width: "600px"}}>
+    <Dialog onClose={handleClose} open={open} fullWidth={true}>
+      <div >
         {fileExt()}
       </div>      
   </Dialog>
