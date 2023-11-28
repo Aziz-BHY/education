@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - mongovol:/data/db
+  front:
+    image: front
+    environment:
+    - REACT_APP_BACKEND_URL=http://localhost:5000
+    ports:
+      - "3000:80"
+  back:
+    image: back
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/
+      - JWT_SECRET=secret
+    volumes:
+      - backvol:/app/uploads
+volumes:
+  mongovol:
+  backvol: 
