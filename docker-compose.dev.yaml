@@ -5,13 +5,13 @@ services:
     volumes:
       - mongovol:/data/db
   front:
-    image: front
+    image: localhost:10001/front
     environment:
     - REACT_APP_BACKEND_URL=http://localhost:5000
     ports:
       - "3000:80"
   back:
-    image: back
+    image: localhost:10002/back
     ports:
       - "5000:5000"
     environment:
