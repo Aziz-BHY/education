@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: education-back
+  name: education-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: education-back
+  template:
+    metadata:
+      labels:
+        app: education-back
+    spec:
+      containers:
+        - env:
+            - name: MONGO_URI
+              value: mongodb://mongodb:27017/
+            - name: JWT_SECRET
+              value: secret
+          image: yscrmetachatbot001.azurecr.io/yscrmetachatbotback001:{#version#}
+          name: education-back-container
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+      imagePullSecrets:
+        - name: registry-creds
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: education-back-svc
+spec:
+  ports:
+    - name: back
+      protocol: TCP
+      port: 5000
+  selector:
+    app: education-back
+  type: ClusterIP
