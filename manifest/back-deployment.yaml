@@ -16,10 +16,23 @@ spec:
     spec:
       containers:
         - env:
-            - name: MONGO_URI
-              value: mongodb://mongodb:27017/
+            - name: MONGO_USERNAME
+              valueFrom: 
+                secretKeyRef:
+                  name: chatbot-secrets
+                  key: mongo-username
+            - name: MONGO_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: chatbot-secrets
+                  key: mongo-password
+            - name: MONGODB_URI
+              value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@mongo-svc:27017/
             - name: JWT_SECRET
-              value: secret
+              valueFrom: 
+                secretKeyRef:
+                  name: chatbot-secrets
+                  key: jwt-secret
           image: yscrmetachatbot001.azurecr.io/yscrmetachatbotback001:{#version#}
           name: education-back-container
           ports:
