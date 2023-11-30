@@ -36,12 +36,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: mongo-username
-                  name: eduction-secret
+                  name: education-secret
             - name: MONGO_INITDB_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: mongo-password
-                  name: eduction-secret
+                  name: education-secret
           image: mongo:7.0.1
           imagePullPolicy: IfNotPresent
           name: mongo
