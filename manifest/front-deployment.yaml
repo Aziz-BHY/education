@@ -18,13 +18,13 @@ spec:
         - env:
             - name: REACT_APP_BACKEND_URL
               value: "http://academy.back.com"
-          image: yscrmetachatbot001.azurecr.io/yscrmetachatbotback001:{#version#}
+          image: "nexus:10001/front"
           name: education-front-container
           ports:
             - containerPort: 80
               protocol: TCP
       imagePullSecrets:
-        - name: registry-creds
+        - name: registry-creds-front
 
 ---
 
