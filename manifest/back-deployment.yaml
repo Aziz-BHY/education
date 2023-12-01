@@ -19,27 +19,27 @@ spec:
             - name: MONGO_USERNAME
               valueFrom: 
                 secretKeyRef:
-                  name: chatbot-secrets
+                  name: education-secret
                   key: mongo-username
             - name: MONGO_PASSWORD
               valueFrom: 
                 secretKeyRef:
-                  name: chatbot-secrets
+                  name: education-secret
                   key: mongo-password
             - name: MONGODB_URI
               value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@mongo-svc:27017/
             - name: JWT_SECRET
               valueFrom: 
                 secretKeyRef:
-                  name: chatbot-secrets
+                  name: education-secret
                   key: jwt-secret
-          image: yscrmetachatbot001.azurecr.io/yscrmetachatbotback001:{#version#}
+          image: "nexus:10002/back"
           name: education-back-container
           ports:
             - containerPort: 5000
               protocol: TCP
       imagePullSecrets:
-        - name: registry-creds
+        - name: registry-creds-back
 
 ---
 
