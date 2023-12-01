@@ -26,7 +26,7 @@ spec:
                 secretKeyRef:
                   name: education-secret
                   key: mongo-password
-            - name: MONGODB_URI
+            - name: MONGO_URI
               value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@mongo-svc:27017/
             - name: JWT_SECRET
               valueFrom: 
