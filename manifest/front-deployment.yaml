@@ -18,7 +18,7 @@ spec:
         - env:
             - name: REACT_APP_BACKEND_URL
               value: "http://academy.back.com"
-          image: "nexus:10001/front"
+          image: "azizbhy/front"
           name: education-front-container
           ports:
             - containerPort: 80
