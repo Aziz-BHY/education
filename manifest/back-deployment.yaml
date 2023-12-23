@@ -33,7 +33,7 @@ spec:
                 secretKeyRef:
                   name: education-secret
                   key: jwt-secret
-          image: "nexus:10002/back"
+          image: "azizbhy/back"
           name: education-back-container
           ports:
             - containerPort: 5000
